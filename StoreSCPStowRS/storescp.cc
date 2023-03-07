@@ -85,6 +85,7 @@ static char rcsid[] = "$dcmtk: " OFFIS_CONSOLE_APPLICATION " v" OFFIS_DCMTK_VERS
 #define PATH_PLACEHOLDER "#p"
 #define FILENAME_PLACEHOLDER "#f"
 #define CALLING_AETITLE_PLACEHOLDER "#a"
+#define ACCESSION_NUMBER_PLACEHOLDER "#n"
 #define CALLED_AETITLE_PLACEHOLDER "#c"
 #define CALLING_PRESENTATION_ADDRESS_PLACEHOLDER "#r"
 
@@ -152,6 +153,7 @@ static OFString    opt_outputDirectory = ".";         // default: output directo
 E_SortStudyMode    opt_sortStudyMode = ESM_None;      // default: no sorting
 static const char *opt_sortStudyDirPrefix = NULL;     // default: no directory prefix
 OFString           lastStudyInstanceUID;
+OFString           lastAccessionNumber;
 OFString           subdirectoryPathAndName;
 OFList<OFString>   outputFileNameArray;
 static const char *opt_execOnReception = NULL;        // default: don't execute anything on reception
@@ -1075,6 +1077,7 @@ static OFCondition acceptAssociation(T_ASC_Network *net, DcmAssociationConfigura
         // also, we need to clear lastStudyInstanceUID to indicate
         // that the last study is not considered to be open any more.
         lastStudyInstanceUID.clear();
+        lastAccessionNumber.clear();
 
         // also, we need to clear subdirectoryPathAndName
         subdirectoryPathAndName.clear();
@@ -1793,6 +1796,7 @@ storeSCPCallback(
       {
         // Accession Number found, do something with it
         std::cout << "Accession Number: " << accessionNumber << std::endl;
+        lastAccessionNumber = accessionNumber;
       }
       else 
       {
@@ -1807,7 +1811,6 @@ storeSCPCallback(
           fileName = accessionNumber;
       }
 
-      std::cout << "filename==" << fileName;
       // in case one of the --sort-xxx options is set, we need to perform some particular steps to
       // determine the actual name of the output file
       if (opt_sortStudyMode != ESM_None)
@@ -1985,9 +1988,6 @@ storeSCPCallback(
                 std::cerr << "Accession Number not found" << std::endl;
             }
         }
-
-        OFLOG_INFO(storescpLogger, "file name=" << fileName);
-        std::cout << "\nfile name=" << fileName;
 
         // update global variables outputFileNameArray
         // (might be used in executeOnReception() and renameOnEndOfStudy)
@@ -2297,7 +2297,11 @@ static void executeOnReception()
   // perform substitution for placeholder #r
   cmd = replaceChars( cmd, OFString(CALLING_PRESENTATION_ADDRESS_PLACEHOLDER), callingPresentationAddress );
 
+  // perform substitution for placeholder #n
+  cmd = replaceChars(cmd, OFString(ACCESSION_NUMBER_PLACEHOLDER), lastAccessionNumber);
+
   // Execute command in a new process
+  std::cout << "Running Command:" << cmd;
   executeCommand( cmd );
 }
 
@@ -2410,8 +2414,12 @@ static void executeOnEndOfStudy()
   // perform substitution for placeholder #r
   cmd = replaceChars( cmd, OFString(CALLING_PRESENTATION_ADDRESS_PLACEHOLDER), callingPresentationAddress );
 
+  // perform substitution for placeholder #n
+  cmd = replaceChars(cmd, OFString(ACCESSION_NUMBER_PLACEHOLDER), lastAccessionNumber);
+
   // Execute command in a new process
-  executeCommand( cmd );
+  std::cout << "Running Command:" << cmd;
+  executeCommand(cmd);
 }
 
 

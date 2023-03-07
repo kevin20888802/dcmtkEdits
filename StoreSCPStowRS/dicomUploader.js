@@ -67,6 +67,11 @@ function deleteTempDir() {
 }
 
 async function main() {
+	
+	// 獲取命令行參數
+	let args = process.argv.slice(2);
+	console.log("\n" + "傳入參數:" + args + "\n");
+	
 	// 執行程序
 	moveDicomFilesToTempDir(dicomDir); // 移動Dicom文件到暫存目錄
 	await uploadDicomFilesInTempDir();
