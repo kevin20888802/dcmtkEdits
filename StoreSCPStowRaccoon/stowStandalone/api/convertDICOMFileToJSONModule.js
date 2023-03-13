@@ -71,7 +71,7 @@ module.exports.convertDICOMFileToJSONModule = async function(filename) {
             }
         }
         if(!fs.existsSync(fullStorePath)) {
-            fs.mkdirSync(fullStorePath, 0o755);
+            fs.mkdirSync(fullStorePath, {recursive:true});
         }
         fs.writeFileSync(
             metadataFullStorePath,

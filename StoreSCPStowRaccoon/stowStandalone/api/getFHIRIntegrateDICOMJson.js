@@ -1,5 +1,6 @@
 const {generateJpeg} = require("./generateJpeg");
 
+const { dcmJson2Patient } = require("../models/FHIR/DICOM2FHIRPatient");
 const { dcm2EndpointFromImagingStudy } = require("../models/FHIR/DICOM2Endpoint");
 const { dcm2jsonV8 } = require("../models/dcmtk");
 const mongodb = require("../models/mongodb");
@@ -7,67 +8,9 @@ const { qidoRetAtt } = require("../models/FHIR/dicom-tag"); // eslint-disable-li
 const _ = require("lodash");
 const moment = require("moment");
 
-async function isDocExist (id) {
-    return new Promise (async (resolve , reject) => {
-        mongodb["endpoint"].findOne ({id : id} , async function (err ,doc) {
-            if (err) {
-                errorMessage.message = err;
-                return resolve (0); //error
-            }
-            if (doc) {
-                return resolve(1); //have doc
-            } else {
-                return resolve(2); //no doc
-            }
-        });
-    });
-}
-async function doUpdateData (data) {
-    return new Promise((resolve , reject) => {
-        let id = data.id;
-        delete data._id;   
-        mongodb["endpoint"].findOneAndUpdate({id : id }  ,{$set : data} , { new : true , rawResult: true} , function (err , newDoc) {
-            if (err) {
-                errorMessage.message = err;
-                return resolve (["false" , err]);
-            }
-            return resolve(["true", {
-                id: id,
-                doc: newDoc.value.getFHIRField() , 
-                code : 200
-            }]);
-        });
-    });
-}
-async function doInsertData(data) {
-    return new Promise ((resolve ) => {
-        let updateData = new mongodb.endpoint(data);
-        updateData.save(function (err, doc) {
-            errorMessage.message = err;
-            return resolve(err ? ["false",err] : ["true", {
-                code : 201 , 
-                doc: doc.getFHIRField()
-            }]);
-        });
-    });
-}
-/**
- * 將DICOM endpoint儲存到 mongoDB
- */
-async function dicomEndpoint2MongoDB(data) {
-    return new Promise(async (resolve, reject) => {
-        let dataExist = await isDocExist(data.id);
-        let dataFuncAfterCheckExist = {
-            0 : () => {
-                return ["false" , ""];
-            } ,
-            1 : doUpdateData , 
-            2 : doInsertData
-        };
-        let [ status , result] = await dataFuncAfterCheckExist[dataExist](data);
-        return resolve([ status , result]);
-    });
-}
+const { dicomEndpoint2MongoDB } = require("./dicomEndpoint2MongoDB");
+const { dicomPatient2MongoDB } = require("./dicomPatient2MongoDB");
+
 function insertMetadata(metadata) {
     return new Promise(async (resolve) => {
         try {
@@ -107,7 +50,8 @@ module.exports.getFHIRIntegrateDICOMJson = async function (dicomJson, filename, 
         let endPoint = dcm2EndpointFromImagingStudy(fhirData);
         await dicomEndpoint2MongoDB(endPoint);
         if (isNeedParsePatient) {
-            await dicomPatient2MongoDB(dicomJson);
+            let thePatient = dcmJson2Patient(dicomjson);
+            await dicomPatient2MongoDB(thePatient);
         }
         fhirData.endpoint = [
             {
