@@ -1,0 +1,7 @@
+storescu.exe -aet USERONE -aec MYSTORESCP 127.0.0.1 6066 D:\Programming\dicomfile\Image0001.dcm
+storescu.exe -aet USERONE -aec MYSTORESCP 127.0.0.1 6066 D:\Programming\dicomfile\Image0001.dcm
+storescu.exe -aet USERONE -aec MYSTORESCP 127.0.0.1 6066 D:\Programming\dicomfile\Image0001.dcm
+storescu.exe -aet USERONE -aec MYSTORESCP 127.0.0.1 6066 D:\Programming\dicomfile\Image0001.dcm
+storescu.exe -aet USERONE -aec MYSTORESCP 127.0.0.1 6066 D:\Programming\dicomfile\Image0001.dcm
+storescu.exe -aet USERONE -aec MYSTORESCP 127.0.0.1 6066 D:\Programming\dicomfile\Image0001.dcm
+storescu.exe -aet USERONE -aec MYSTORESCP 127.0.0.1 6066 D:\Programming\dicomfile\Image0001.dcm
