@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "dicom-parser": "^1.8.21",
+    "dicom-to-json": "^1.2.1",
+    "dotenv": "^16.0.3",
+    "fhir": "^4.11.2",
+    "flat": "^5.0.2",
+    "iconv-lite": "^0.6.3",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "mongoose": "^6.3.4",
+    "mongoose-schema-jsonschema": "^2.0.2",
+    "shorthash": "^0.0.2"
+  },
+  "name": "storescpstowrs",
+  "version": "1.0.0",
+  "main": "dicomUploader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
