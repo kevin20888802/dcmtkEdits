@@ -123,12 +123,12 @@ async function onEverySec() {
   // 刪除暫存目錄及其中的所有文件
 	deleteTempDir(); 
   await sleep(1000);
-  console.log("one sec passed.");
+  //console.log("one sec passed.");
   await onEverySec();
 }
 
 async function startStoreSCP() {
-  const dcmService = spawn(`./storescp`,["-aet", AETitle , "-od", "./dicomFiles", Port]);
+  const dcmService = spawn(`storescp`,["-aet", AETitle , "-od", "./dicomFiles", Port]);
   dcmService.stdout.on('data', (data) => onDCMOutput(data));
 }
 
