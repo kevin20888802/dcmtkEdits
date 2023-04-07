@@ -42,9 +42,9 @@ sudo apt-get install dcmtk -y
 
 ### Step4-Modify Configs in `dicomUploader.js`
 ```js=
-const AETitle = "MYSTORESCP"; //可以更改為RACCOONSCP或其他AE title
+const AETitle = "RACCOON_SCP"; //可以更改為其他AE title
 const Port = 6066; // 設定此插件要運行在哪個port
-const stowRSUrl = 'http://10.40.8.76:80/dicom-web/studies'; // 設定為你Raccoon的api網址
+const stowRSUrl = 'http://127.0.0.1:8081/dicom-web/studies'; // 設定為你Raccoon的api網址
 const dicomDir = './dicomFiles'; // 指定Dicom目錄
 var tempDir = "./temp/"; // 建立隨機產生的暫存目錄
 ```

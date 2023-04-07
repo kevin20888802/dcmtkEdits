@@ -5,9 +5,9 @@ const { spawn } = require('node:child_process');
 const request = require('request');
 const uuid = require('uuid');
 
-const AETitle = "MYSTORESCP";
+const AETitle = "RACCOON_SCP";
 const Port = 6066;
-const stowRSUrl = 'http://10.40.8.76:80/dicom-web/studies';
+const stowRSUrl = 'http://127.0.0.1:8081/dicom-web/studies';
 const dicomDir = './dicomFiles'; // 指定Dicom目錄
 var tempDir = "./temp/"; // 建立隨機產生的暫存目錄
 
