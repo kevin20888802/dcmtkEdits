@@ -1,8 +1,60 @@
 # RaccoonSCP plugin
 ### This is a [SCP](#關於scpservice-class-provider) project allow you to send dicom images via [C-STORE](#關於c-store) protocol and store data in [Raccoon](https://github.com/cylab-tw/raccoon)
 
-## Installation
+## Requirements
+### Please make sure you have deployed [Raccoon](https://github.com/cylab-tw/raccoon)
 
+### If not, you can follow this document to Deploy Raccoon
++ https://github.com/cylab-tw/raccoon#installation
+
+<image src="https://repository-images.githubusercontent.com/314441601/8e680180-33da-11eb-8da5-266f5636f213" width="50%"></image>
+
+## Installation
+### Step1-Clone this Repo
+```
+git clone https://github.com/kevin20888802/dcmtkEdits.git
+```
+
+### Step2-install project dependency packages
+```
+cd dcmtkEdits/StoreSCPStowRS
+npm install
+```
+
+### Step3-install dcmtk tools
+#### Windows (Run Terminal as Administrator)
+```
+choco install dcmtk -y
+```
+
+> ⚠️ **If you have not installed chocolatey on your Windows, use the follow command to do so.** (❗Run Terminal as Administrator❗)
+```
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+```
+> Command soure: https://community.chocolatey.org/courses/installation/installing?method=installing-chocolatey
+
+
+#### Linux
+```
+sudo apt update
+sudo apt-get install dcmtk -y
+```
+
+### Step4-Modify Configs in `dicomUploader.js`
+```js=
+const AETitle = "MYSTORESCP"; //可以更改為RACCOONSCP或其他AE title
+const Port = 6066; // 設定此插件要運行在哪個port
+const stowRSUrl = 'http://10.40.8.76:80/dicom-web/studies'; // 設定為你Raccoon的api網址
+const dicomDir = './dicomFiles'; // 指定Dicom目錄
+var tempDir = "./temp/"; // 建立隨機產生的暫存目錄
+```
+
+### Step5-Run this plugin
+```
+cd dcmtkEdits/StoreSCPStowRS
+node dicomUploader.js
+# Or you may use pm2 to start this project
+```
 
 ## 關於SCP(Service Class Provider)
 SCP (Service Class Provider) 是指一種提供 DICOM 服務的實體，可以接收和處理 DICOM 操作（如 C-STORE、C-FIND、C-MOVE 等）。SCP 可以是 PACS 伺服器、影像檢視工作站或其他 DICOM 設備。SCP 主要用於接收和處理其他 DICOM 設備發送的影像和資訊。
